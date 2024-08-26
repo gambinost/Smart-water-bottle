@@ -1,16 +1,12 @@
-# problemm9
+# Smart water bottle
 
-A new Flutter project.
+### Main Idea:
 
-## Getting Started
+## Creating a Smart Fitness Bottle (SFB) that is suited for users who wish for automation everywhere around them.
 
-This project is a starting point for a Flutter application.
+## The SFB is like a fitness Pal: it reminds the user  to drink water if he hasn’t for a while and the user  can also set reminders to drink water at specific times of the day.
 
-A few resources to get you started if this is your first Flutter project:
+## The bottle also monitors your heart rate and the temperature and humidity around you. 
+It can detect whenever the environment around you is too harsh and reminds to take a break.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Overall, the SFB is the best fitness Pal an athlete can wish for
