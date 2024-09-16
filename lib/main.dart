@@ -9,7 +9,7 @@ import 'package:problemm9/logo/logo.dart';
 
 void main() async { // the async keyword makes this function run independently without blocking the main flow (other blocks are executed and this takes its time fetching for data)
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeFirebase(); // waiting to initialize firebase before before running my app
+  await initializeFirebase(); // waiting to initialize firebase services before before running my app
   runApp(MyApp());
 }
 

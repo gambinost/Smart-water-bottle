@@ -16,7 +16,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String selectedGender = 'Male';
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { //runs main widgets each time with application
     return Scaffold(
       appBar: AppBar(
         title: Text("Register"),
@@ -198,7 +198,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .catchError((error) =>
                                         print('Failed to add user: $error'));
 
-                                Navigator.pushNamed(context, '/homepage');
+                                Navigator.pushReplacementNamed(
+                                    context, '/homepage');
                                 // a catch if anything wrong happend with the firestore end
                               } catch (e) {
                                 setState(() {

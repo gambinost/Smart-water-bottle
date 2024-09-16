@@ -15,7 +15,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
   final String topicReminderState = 'flutter/reminder_state';
   final String topicWaterReminder = 'esp/water_reminder';
 
-  Duration _timeRemaining = Duration();
   bool _isTimerActive = false;
   TimeOfDay? _selectedAlarmTime;
   Timer? _countdownTimer;
@@ -84,7 +83,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
   void _stopTimer() {
     setState(() {
       _isTimerActive = false;
-      _timeRemaining = Duration(minutes: 0, seconds: 0);
       _countdownTimer?.cancel();
       _publishMessage(topicReminderState, 'turned off');
     });
@@ -122,6 +120,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       // If the adjusted time is before the current time, set the alarm for the next day
       if (adjustedDateTime.isBefore(now)) {
         adjustedDateTime.add(Duration(days: 1));
+        _showReminderDialog('The alarm time has been moved to the next day.');
       }
 
       final timeUntilAlarm = adjustedDateTime.difference(now);
@@ -176,8 +175,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
           icon: Icon(Icons.arrow_back),
           iconSize: 30,
           onPressed: () {
-            Navigator.pushNamed(
-                context, '/homepage'); // Navigate to the desired screen
+            Navigator.pushNamed(context, '/homepage');
           },
         ),
       ),

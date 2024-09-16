@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Firebase Authentication functionalities for user sign-in and authentication.
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,13 +8,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // controllers to manage the input and retrieve and update them later
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // sign_in function
   void _signIn() async {
-    // if any of the fields is empty we show a snackbar to please fill in all the fields
     if (emailController.text.trim().isEmpty ||
         passwordController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -26,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       return;
     }
-    // a try anc catch to ensure the 'authentication with firebase'
+
     try {
       final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -36,7 +33,6 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushNamed(
           context,
           '/homepage',
-          arguments: userCredential.user!.email,
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -69,113 +65,115 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView( // this widget is used to help in the render flex error
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/water.jpg'),
-                fit: BoxFit.cover,
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/water.jpg'),
+              fit: BoxFit.cover,
             ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Container(
-                  decoration: BoxDecoration( // the box decoration to make it look like the figma design
-                    color: Color(0xFF86B9D6).withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Color.fromARGB(255, 59, 129, 170),
-                      width: 2,
-                    ),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF86B9D6).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Color.fromARGB(255, 59, 129, 170),
+                    width: 2,
                   ),
-                  padding: EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome to',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                ),
+                padding: EdgeInsets.all(24),
+                child: ListView(
+                  shrinkWrap: true, // Ensures it takes only the necessary space
+                  children: [
+                    Text(
+                      'smart fitness bottle',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                      SizedBox(height: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 20),
 
-                      // Email Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 96, 191, 247),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: TextField(
-                            controller: emailController,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.email, color: Colors.black),
-                              hintText: 'Email',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 15),
-                              hintStyle: TextStyle(color: Colors.black),
-                            ),
-                            style: TextStyle(color: Colors.black),
+                    // Email Field
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 96, 191, 247),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: emailController,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.email, color: Colors.black),
+                            hintText: 'Email',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            hintStyle: TextStyle(color: Colors.black),
+                            // keyboardType: TextInputType.emailAddress,
+
                           ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
-                      SizedBox(height: 20),
+                    ),
+                    SizedBox(height: 20),
 
-                      // Password Field
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 96, 191, 247),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 300,
-                          child: TextField(
-                            controller: passwordController,
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              prefixIcon: Icon(Icons.lock, color: Colors.black),
-                              hintText: 'Password',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 15),
-                              hintStyle: TextStyle(color: Colors.black),
-                            ),
-                            style: TextStyle(color: Colors.black),
+                    // Password Field
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 96, 191, 247),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: SizedBox(
+                        width: 300,
+                        child: TextField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.lock, color: Colors.black),
+                            hintText: 'Password',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            hintStyle: TextStyle(color: Colors.black),
                           ),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
-                      SizedBox(height: 20),
+                    ),
+                    SizedBox(height: 20),
 
-                      // Login Button
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(1),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: SizedBox(
-                          width: 200,
-                          child: ElevatedButton(
-                            onPressed: _signIn, // on pressing the login button the authentication with FIREBASE starts
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              backgroundColor: Colors.blue.withOpacity(0.6),
+                    // Login Button
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(1),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: SizedBox(
+                        width: 200,
+                        child: ElevatedButton(
+                          onPressed: _signIn,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            child: Text('Login'),
+                            backgroundColor: Colors.blue.withOpacity(0.6),
                           ),
+                          child: Text('Login'),
                         ),
                       ),
-                      SizedBox(height: 20),
+                    ),
+                    SizedBox(height: 20),
 
-                      // Register text with clickable "Register Here."  that is why we imported the gestures
-                      RichText(
+                    // Register text with clickable "Register Here."
+                    Center(
+                      child: RichText(
                         text: TextSpan(
                           text: "Don't Have an Account?\n ",
                           style: TextStyle(
@@ -195,8 +193,8 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

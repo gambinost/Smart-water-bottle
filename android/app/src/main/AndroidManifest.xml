@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.your_app_name">
 
-    <!-- Permissions -->
-    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+<!--     Permissions -->
+     <uses-permission android:name="android.permission.INTERNET" />
     <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> -->
     <!-- Add other permissions if needed -->
 

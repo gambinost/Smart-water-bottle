@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   String humidity = '0';
   String waterLevel = '0';
 
-  bool isMixerOn = false;
+  boolisMixerOn = false;
 
   @override
   void initState() {
@@ -38,6 +38,7 @@ class _HomePageState extends State<HomePage> {
       mqttClient.subscribeToTopic('esp/temperature', _handleMessage);
       mqttClient.subscribeToTopic('esp/humidity', _handleMessage);
       mqttClient.subscribeToTopic('esp/water_level', _handleMessage);
+
       mqttClient.subscribeToTopic('esp/heartbeat/alert', _handleAlertMessage);
       mqttClient.subscribeToTopic('esp/temperature/alert', _handleAlertMessage);
       mqttClient.subscribeToTopic('esp/humidity/alert', _handleAlertMessage);
@@ -56,8 +57,6 @@ class _HomePageState extends State<HomePage> {
         temperature = message;
       } else if (topic == 'esp/humidity') {
         humidity = message;
-      } else if (topic == 'esp/water_level') {
-        waterLevel = message + ' cm';
       }
     });
   }
@@ -141,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       .doc(user?.uid)
                       .get();
                   Map<String, dynamic> data =
-                      userInfo.data() as Map<String, dynamic>;
+                  userInfo.data() as Map<String, dynamic>;
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -228,12 +227,12 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Row(
-                          // aligning our sensor reading in card shapes and if i received
+                          // aligning our sensor reading in card shapes
                           // and alert message from the esp it will popup an alert dialog
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _buildSensorCard('BPM', heartbeat),
-                            SizedBox(width: 20),
+                            SizedBox(width: 5),
                             _buildSensorCard('Temperature', temperature),
                           ],
                         ),
@@ -242,8 +241,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             _buildSensorCard('Humidity', humidity),
-                            SizedBox(width: 20),
-                            _buildSensorCard('WaterLevel', waterLevel),
+
                           ],
                         ),
                       ],
@@ -258,7 +256,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Text('Mixer',
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.white)),
+                              TextStyle(fontSize: 20, color: Colors.white)),
                           Switch(
                             value: isMixerOn,
                             onChanged: (bool value) {

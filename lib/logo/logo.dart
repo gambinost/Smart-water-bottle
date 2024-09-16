@@ -28,7 +28,7 @@ class _SplashScreenState extends State<Logo> {
           mainAxisAlignment: MainAxisAlignment.center, //aligning out column content in the center of the main axis
           children: [
             Text(
-              "Smart water bottle",
+              "Smart fitness bottle",
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
