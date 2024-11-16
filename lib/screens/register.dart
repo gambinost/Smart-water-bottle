@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }
@@ -19,12 +21,12 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) { //runs main widgets each time with application
     return Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
-        backgroundColor: Color(0xFF86B9D6),
+        title: const Text("Register"),
+        backgroundColor: const Color(0xFF86B9D6),
         centerTitle: true,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/water.jpg'),
             fit: BoxFit.cover,
@@ -35,14 +37,14 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.all(24.0),
             child: Container(
               decoration: BoxDecoration(
-                color: Color(0xFF86B9D6).withOpacity(0.2),
+                color: const Color(0xFF86B9D6).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Color.fromARGB(255, 59, 129, 170),
+                  color: const Color.fromARGB(255, 59, 129, 170),
                   width: 2,
                 ),
               ),
-              padding: EdgeInsets.all(24),
+              padding: const EdgeInsets.all(24),
               child: SingleChildScrollView(
                 // for controlling the render flex problem
                 child: Column(
@@ -55,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: 'Email',
                       icon: Icons.email,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Password Field
                     _buildTextField(
@@ -64,7 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       icon: Icons.lock,
                       obscureText: true,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // National ID Field
                     _buildTextField(
@@ -72,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: 'National ID',
                       icon: Icons.credit_card,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Age Field
                     _buildTextField(
@@ -80,24 +82,24 @@ class _RegisterPageState extends State<RegisterPage> {
                       hintText: 'Age',
                       icon: Icons.calendar_today,
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Gender Dropdown
                     SizedBox(
                       width: 300,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 96, 191, 247),
+                          color: const Color.fromARGB(255, 96, 191, 247),
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             value: selectedGender,
                             isExpanded: true,
-                            icon: Icon(Icons.arrow_drop_down,
+                            icon: const Icon(Icons.arrow_drop_down,
                                 color: Colors.black),
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                             onChanged: (String? newValue) {
                               setState(() {
                                 if (newValue != null) {
@@ -116,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // Register Button
                     Container(
@@ -144,11 +146,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: Text("Error"),
-                                    content: Text("All fields are required."),
+                                    title: const Text("Error"),
+                                    content: const Text("All fields are required."),
                                     actions: [
                                       TextButton(
-                                        child: Text("OK"),
+                                        child: const Text("OK"),
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
@@ -163,12 +165,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text("Error"),
-                                      content: Text(
+                                      title: const Text("Error"),
+                                      content: const Text(
                                           "national id must have 14 digits."),
                                       actions: [
                                         TextButton(
-                                          child: Text("OK"),
+                                          child: const Text("OK"),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -206,7 +208,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   String errorMessage =
                                       "Failed to register: $e";
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
+                                    const SnackBar(
                                       content:
                                           Text("error : failed to register"),
                                       backgroundColor: Colors.red,
@@ -217,17 +219,17 @@ class _RegisterPageState extends State<RegisterPage> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 25),
+                            padding: const EdgeInsets.symmetric(vertical: 25),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                             backgroundColor: Colors.blue.withOpacity(0.6),
                           ),
-                          child: Text('Register'),
+                          child: const Text('Register'),
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -246,7 +248,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Color.fromARGB(255, 96, 191, 247),
+        color: const Color.fromARGB(255, 96, 191, 247),
         borderRadius: BorderRadius.circular(30),
       ),
       child: SizedBox(
@@ -258,10 +260,10 @@ class _RegisterPageState extends State<RegisterPage> {
             prefixIcon: Icon(icon, color: Colors.black),
             hintText: hintText,
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 15),
-            hintStyle: TextStyle(color: Colors.black),
+            contentPadding: const EdgeInsets.symmetric(vertical: 15),
+            hintStyle: const TextStyle(color: Colors.black),
           ),
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
       ),
     );

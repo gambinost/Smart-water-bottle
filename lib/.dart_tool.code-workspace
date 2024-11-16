@@ -1,0 +1,40 @@
+{
+	"folders": [
+		{
+			"path": "../.dart_tool"
+		},
+		{
+			"path": "../.git"
+		},
+		{
+			"path": "../.idea"
+		},
+		{
+			"path": "../android"
+		},
+		{
+			"path": "../assets"
+		},
+		{
+			"path": "../build"
+		},
+		{
+			"path": "../ios"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../linux"
+		},
+		{
+			"path": "../macos"
+		},
+		{
+			"path": "../web"
+		},
+		{
+			"path": "../windows"
+		}
+	]
+}

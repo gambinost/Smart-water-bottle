@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:problemm9/mqtt/mqtt_service.dart';
 
 class ReminderScreen extends StatefulWidget {
+  const ReminderScreen({super.key});
+
   @override
   _ReminderScreenState createState() => _ReminderScreenState();
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  late MQTTClientWrapper
-      mqttService; // instantiating a client to deal with the mqtt communications
+  late MQTTClientWrapper mqttService; // instantiating a client to deal with the mqtt communications
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   //defining the topics we will use
   final String topicReminder = 'flutter/reminder';
   final String topicReminderState = 'flutter/reminder_state';
@@ -29,6 +33,19 @@ class _ReminderScreenState extends State<ReminderScreen> {
       topic: topicReminder,
     );
     _initializeMQTTClient();
+    _initializeNotifications();
+  }
+
+  Future<void> _initializeNotifications() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
 // disconnect the mqtt connection if the widget is disposed
@@ -57,7 +74,29 @@ class _ReminderScreenState extends State<ReminderScreen> {
   void _handleWaterReminder(String message, String topic) {
     if (message.toLowerCase() == 'yes') {
       _showReminderDialog('It\'s time to drink water!');
+      _showReminderNotification('It\'s time to drink water!');
     }
+  }
+
+  Future<void> _showReminderNotification(String message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'reminder_channel',
+      'Reminder Notifications',
+      importance: Importance.max,
+      priority: Priority.high,
+      showWhen: true,
+    );
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Water Reminder',
+      message,
+      platformChannelSpecifics,
+      payload: 'water_reminder',
+    );
   }
 
 // the publishing function
@@ -115,12 +154,11 @@ class _ReminderScreenState extends State<ReminderScreen> {
         _selectedAlarmTime!.minute,
       );
 
-      final adjustedDateTime = selectedDateTime.subtract(Duration(hours: 1));
+      final adjustedDateTime = selectedDateTime.subtract(const Duration(hours: 1));
 
       // If the adjusted time is before the current time, set the alarm for the next day
       if (adjustedDateTime.isBefore(now)) {
-        adjustedDateTime.add(Duration(days: 1));
-        _showReminderDialog('The alarm time has been moved to the next day.');
+        adjustedDateTime.add(const Duration(days: 1));
       }
 
       final timeUntilAlarm = adjustedDateTime.difference(now);
@@ -139,6 +177,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }
 
   void _alarmTriggered() {
+    _showReminderNotification('It\'s time to drink water!');
     _showReminderDialog('It\'s time to drink water!');
   }
 
@@ -147,14 +186,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Reminder'),
+          title: const Text('Reminder'),
           content: Text(message),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -166,13 +205,13 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Reminder'),
-        backgroundColor: Color(0xFF86B9D6),
+        title: const Text('Reminder'),
+        backgroundColor: const Color(0xFF86B9D6),
         centerTitle: true,
         automaticallyImplyLeading: false,
         // Removes the default back button
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           iconSize: 30,
           onPressed: () {
             Navigator.pushNamed(context, '/homepage');
@@ -182,7 +221,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/spongepop.jpg'),
                 fit: BoxFit.cover,
@@ -193,23 +232,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 50),
+                  const SizedBox(height: 50),
                   Flexible(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Color(0xFF86B9D6).withOpacity(0.2),
+                        color: const Color(0xFF86B9D6).withOpacity(0.2),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Color.fromARGB(255, 59, 129, 170),
+                          color: const Color.fromARGB(255, 59, 129, 170),
                           width: 2,
                         ),
                       ),
-                      padding: EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(24),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(height: 16.0),
+                          const SizedBox(height: 16.0),
                           ElevatedButton(
                             onPressed: () {
                               if (_isTimerActive) {
@@ -221,14 +260,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                     int minutes = 0;
                                     int seconds = 0;
                                     return AlertDialog(
-                                      title: Text('Set reminder'),
+                                      title: const Text('Set reminder'),
                                       content: Row(
                                         children: [
                                           Expanded(
                                             child: TextField(
                                               keyboardType:
                                                   TextInputType.number,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                   labelText: 'Minutes'),
                                               onChanged: (value) {
                                                 minutes =
@@ -240,7 +279,7 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                             child: TextField(
                                               keyboardType:
                                                   TextInputType.number,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                   labelText: 'Seconds'),
                                               onChanged: (value) {
                                                 seconds =
@@ -255,14 +294,14 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text('Cancel'),
+                                          child: const Text('Cancel'),
                                         ),
                                         TextButton(
                                           onPressed: () {
                                             _startTimer(minutes, seconds);
                                             Navigator.of(context).pop();
                                           },
-                                          child: Text('Start'),
+                                          child: const Text('Start'),
                                         ),
                                       ],
                                     );
@@ -274,12 +313,12 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                 ? 'Turn Off Reminder'
                                 : 'Set Reminder'),
                           ),
-                          Divider(
+                          const Divider(
                             height: 56.0,
                             color: Colors.black,
                             thickness: 2.0,
                           ),
-                          Text(
+                          const Text(
                             'Set Alarm Time',
                             style: TextStyle(
                                 fontSize: 16,
@@ -292,10 +331,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
                                   ? 'Alarm set for: ${_selectedAlarmTime!.format(context)}'
                                   : 'No alarm set',
                             ),
-                            trailing: Icon(Icons.access_alarm),
+                            trailing: const Icon(Icons.access_alarm),
                             onTap: _selectAlarmTime,
                           ),
-                          SizedBox(height: 24.0),
+                          const SizedBox(height: 24.0),
                         ],
                       ),
                     ),

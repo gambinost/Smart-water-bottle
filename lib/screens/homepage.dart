@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:problemm9/mqtt/mqtt_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,9 +17,8 @@ class _HomePageState extends State<HomePage> {
   String heartbeat = '0';
   String temperature = '0';
   String humidity = '0';
-  String waterLevel = '0';
 
-  boolisMixerOn = false;
+  bool isMixerOn = false;
 
   @override
   void initState() {
@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
       mqttClient.subscribeToTopic('esp/heartbeat', _handleMessage);
       mqttClient.subscribeToTopic('esp/temperature', _handleMessage);
       mqttClient.subscribeToTopic('esp/humidity', _handleMessage);
-      mqttClient.subscribeToTopic('esp/water_level', _handleMessage);
 
       mqttClient.subscribeToTopic('esp/heartbeat/alert', _handleAlertMessage);
       mqttClient.subscribeToTopic('esp/temperature/alert', _handleAlertMessage);
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.white,
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -105,7 +104,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: const Text("Home Page"),
         centerTitle: true,
       ),
       // used for the navigation drawer (like the sidebar)
@@ -119,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   color: Colors.blueGrey[900],
                 ),
-                child: Text(
+                child: const Text(
                   'Menu',
                   style: TextStyle(
                     fontSize: 24,
@@ -129,8 +128,8 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 // showing the user information via FIREBASE
-                leading: Icon(Icons.person, color: Colors.white),
-                title: Text('Show User Info',
+                leading: const Icon(Icons.person, color: Colors.white),
+                title: const Text('Show User Info',
                     style: TextStyle(color: Colors.white)),
                 onTap: () async {
                   Navigator.pop(context); // Close the drawer
@@ -140,12 +139,12 @@ class _HomePageState extends State<HomePage> {
                       .doc(user?.uid)
                       .get();
                   Map<String, dynamic> data =
-                  userInfo.data() as Map<String, dynamic>;
+                      userInfo.data() as Map<String, dynamic>;
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text("User Information"),
+                        title: const Text("User Information"),
                         content: SingleChildScrollView(
                           child: ListBody(
                             children: [
@@ -158,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         actions: [
                           TextButton(
-                            child: Text("Exit"),
+                            child: const Text("Exit"),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -171,16 +170,16 @@ class _HomePageState extends State<HomePage> {
               ),
               ListTile(
                 // loging out of the account so you have to login again
-                leading: Icon(Icons.remove_circle_outline, color: Colors.white),
-                title: Text('Logout', style: TextStyle(color: Colors.white)),
+                leading: const Icon(Icons.remove_circle_outline, color: Colors.white),
+                title: const Text('Logout', style: TextStyle(color: Colors.white)),
                 onTap: () {
                   Navigator.pushNamed(context, '/login');
                 },
               ),
               ListTile(
                 // deleting the account from FIRESTORE and returning to the login page
-                leading: Icon(Icons.delete_forever, color: Colors.white),
-                title: Text('Delete Account',
+                leading: const Icon(Icons.delete_forever, color: Colors.white),
+                title: const Text('Delete Account',
                     style: TextStyle(color: Colors.white)),
                 onTap: () async {
                   User? user = FirebaseAuth.instance.currentUser;
@@ -194,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                   } catch (e) {
                     print("Failed to delete user: $e");
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text("user deleted successfully"),
                         duration: Duration(seconds: 4),
                       ),
@@ -208,55 +207,45 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-
       body: Stack(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/spongepop.jpg"),
                 fit: BoxFit.cover,
               ),
             ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          // aligning our sensor reading in card shapes
-                          // and alert message from the esp it will popup an alert dialog
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSensorCard('BPM', heartbeat),
-                            SizedBox(width: 5),
-                            _buildSensorCard('Temperature', temperature),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSensorCard('Humidity', humidity),
-
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Column(
+            child: ListView(
+              // Replaced Column with ListView
+              padding: const EdgeInsets.symmetric(vertical: 40.0),
+              children: [
+                Center(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Mixer',
+                          _buildSensorCard('BPM', heartbeat),
+                          const SizedBox(width: 5),
+                          _buildSensorCard('Temperature', temperature),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSensorCard('Humidity', humidity),
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Mixer',
                               style:
-                              TextStyle(fontSize: 20, color: Colors.white)),
+                                  TextStyle(fontSize: 20, color: Colors.white)),
                           Switch(
                             value: isMixerOn,
                             onChanged: (bool value) {
@@ -270,18 +259,17 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushNamed(context, '/reminder');
                         },
-                        child: Text('Go to Reminders'),
+                        child: const Text('Go to Reminders'),
                       ),
                     ],
                   ),
-                  Spacer(),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -291,8 +279,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.pushNamed(context, '/login');
               },
-              child: Icon(Icons.arrow_back),
               backgroundColor: Colors.blue,
+              child: Icon(Icons.arrow_back),
             ),
           ),
         ],
@@ -311,15 +299,15 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               value,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
                 color: Colors.white,
               ),

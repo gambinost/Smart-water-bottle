@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 Future<void> initializeFirebase() async {
   try {
     await Firebase.initializeApp(
-      options: FirebaseOptions(
+      options: const FirebaseOptions(
         apiKey: "AIzaSyDwaV1aIhjuZ2fRC_JVGi1eptT2XXA1ljQ",
         authDomain: "smart-bottle-cd2e5.firebaseapp.com",
         projectId: "smart-bottle-cd2e5",
