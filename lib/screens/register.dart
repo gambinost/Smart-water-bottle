@@ -11,14 +11,29 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   // setting a controller for each input field so we can fetch it later using firestore features
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nationalIdController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController ageController;
   String selectedGender = 'Male';
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    ageController = TextEditingController();
+    super.initState();
+  }
 
   @override
-  Widget build(BuildContext context) { //runs main widgets each time with application
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    ageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //runs main widgets each time with application
     return Scaffold(
       appBar: AppBar(
         title: const Text("Register"),
@@ -67,15 +82,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: true,
                     ),
                     const SizedBox(height: 20),
-
-                    // National ID Field
-                    _buildTextField(
-                      controller: nationalIdController,
-                      hintText: 'National ID',
-                      icon: Icons.credit_card,
-                    ),
-                    const SizedBox(height: 20),
-
                     // Age Field
                     _buildTextField(
                       controller: ageController,
@@ -133,13 +139,10 @@ class _RegisterPageState extends State<RegisterPage> {
                             //trimming the data to use it later
                             String email = emailController.text.trim();
                             String password = passwordController.text.trim();
-                            String nationalId =
-                                nationalIdController.text.trim();
                             String age = ageController.text.trim();
                             // if any field found empty an alert will be shown
                             if (email.isEmpty ||
                                 password.isEmpty ||
-                                nationalId.isEmpty ||
                                 age.isEmpty ||
                                 selectedGender.isEmpty) {
                               showDialog(
@@ -147,7 +150,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     title: const Text("Error"),
-                                    content: const Text("All fields are required."),
+                                    content:
+                                        const Text("All fields are required."),
                                     actions: [
                                       TextButton(
                                         child: const Text("OK"),
@@ -160,24 +164,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 },
                               );
                               // the national id should be consisting of 14 number
-                            } else if (nationalId.length != 14) {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text("Error"),
-                                      content: const Text(
-                                          "national id must have 14 digits."),
-                                      actions: [
-                                        TextButton(
-                                          child: const Text("OK"),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  });
                             } else {
                               // the authentication part the keyword await here shows that we can't go further unless the authentication is done correctly
                               try {
@@ -193,7 +179,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     .set({
                                       'age': age,
                                       'email': email,
-                                      'national ID': nationalId,
                                       'gender': selectedGender,
                                     })
                                     .then((value) => print('User Added'))

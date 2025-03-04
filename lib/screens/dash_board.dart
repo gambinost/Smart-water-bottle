@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:problemm9/mqtt/mqtt_service.dart';
+import '/mqtt/mqtt_service.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});

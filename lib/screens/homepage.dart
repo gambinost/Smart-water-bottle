@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:problemm9/mqtt/mqtt_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '/mqtt/mqtt_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -265,7 +265,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pushNamed(context, '/reminder');
                         },
                         child: const Text('Go to Reminders'),
-                      ),
+                      ), 
                     ],
                   ),
                 ),
@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/login');
               },
               backgroundColor: Colors.blue,
-              child: Icon(Icons.arrow_back),
+              child: const Icon(Icons.arrow_back),
             ),
           ),
         ],

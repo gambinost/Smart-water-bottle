@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'firebase_options.dart'; // Import your Firebase initialization file such as the API key and others.
-import 'package:problemm9/screens/homepage.dart';
-import 'package:problemm9/screens/login.dart';
-import 'package:problemm9/screens/register.dart';
-import 'package:problemm9/screens/reminder.dart';
-import 'package:problemm9/effects/logo.dart';
-import 'package:problemm9/screens/dash_board.dart';
-import 'package:problemm9/effects/rive.dart';
+import '/screens/homepage.dart';  
+import '/screens/login.dart';  
+import '/screens/register.dart';  
+import '/screens/reminder.dart';  
+import '/effects/logo.dart';  
+import '/screens/dash_board.dart'; 
+import '/effects/rive.dart';  
+
 
 
 void main() async { // the async keyword makes this function run independently without blocking the main flow (other blocks are executed and this takes its time fetching for data)
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase(); // waiting to initialize firebase services before before running my app
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 // here i used maps and routes to open classes in the order i prefer for the best flow of this app

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:problemm9/mqtt/mqtt_service.dart';
+import '/mqtt/mqtt_service.dart';
 
 class ReminderScreen extends StatefulWidget {
   const ReminderScreen({super.key});
@@ -11,10 +11,11 @@ class ReminderScreen extends StatefulWidget {
 }
 
 class _ReminderScreenState extends State<ReminderScreen> {
-  late MQTTClientWrapper mqttService; // instantiating a client to deal with the mqtt communications
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  late MQTTClientWrapper mqttService;
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  //defining the topics we will use
+  // Topics for MQTT
   final String topicReminder = 'flutter/reminder';
   final String topicReminderState = 'flutter/reminder_state';
   final String topicWaterReminder = 'esp/water_reminder';
@@ -24,7 +25,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
   Timer? _countdownTimer;
 
   @override
-  // preparing the connection
   void initState() {
     super.initState();
     mqttService = MQTTClientWrapper(
@@ -37,18 +37,17 @@ class _ReminderScreenState extends State<ReminderScreen> {
   }
 
   Future<void> _initializeNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@drawable/iconn'); // Use your app logo here
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+  const InitializationSettings initializationSettings =
+      InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+}
 
-// disconnect the mqtt connection if the widget is disposed
   @override
   void dispose() {
     mqttService.disconnectMQTT();
@@ -56,12 +55,9 @@ class _ReminderScreenState extends State<ReminderScreen> {
     super.dispose();
   }
 
-  // preparing the connection and subscribing to the topic below and handling each message recieved differently based on the topic
-  // the handle message is a function i made to deal with a specific topic so each topic has its own functionality
   Future<void> _initializeMQTTClient() async {
     try {
       await mqttService.prepareMqttClient();
-      // mqttService.subscribeToTopic(topicReminder, _reminderMessage);
       mqttService.subscribeToTopic(topicWaterReminder, _handleWaterReminder);
       print('Subscribed to topic: $topicWaterReminder');
     } catch (e) {
@@ -69,8 +65,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     }
   }
 
-  // if the esp sent me yes when the time i sent is based this is my green flag to be sure that the user didnt drink and i need to show a messge
-  // on the screen as a reminder to drink
   void _handleWaterReminder(String message, String topic) {
     if (message.toLowerCase() == 'yes') {
       _showReminderDialog('It\'s time to drink water!');
@@ -99,7 +93,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 
-// the publishing function
   void _publishMessage(String topic, String message) {
     mqttService.publishMessage(topic, message);
     ScaffoldMessenger.of(context).showSnackBar(
@@ -107,7 +100,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     );
   }
 
-// handles the reminder and publish the time sent
   void _startTimer(int minutes, int seconds) {
     setState(() {
       _isTimerActive = true;
@@ -118,7 +110,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     });
   }
 
-// stopping the reminder and publishing its new state
   void _stopTimer() {
     setState(() {
       _isTimerActive = false;
@@ -127,7 +118,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
     });
   }
 
-// fetching the time selected from the clock
   Future<void> _selectAlarmTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -142,11 +132,10 @@ class _ReminderScreenState extends State<ReminderScreen> {
     }
   }
 
-// hamdling the alarm and the message sent when the time is reached
   void _setAlarm() {
     if (_selectedAlarmTime != null) {
       final now = DateTime.now();
-      final selectedDateTime = DateTime(
+      var selectedDateTime = DateTime(
         now.year,
         now.month,
         now.day,
@@ -154,25 +143,23 @@ class _ReminderScreenState extends State<ReminderScreen> {
         _selectedAlarmTime!.minute,
       );
 
-      final adjustedDateTime = selectedDateTime.subtract(const Duration(hours: 1));
-
-      // If the adjusted time is before the current time, set the alarm for the next day
-      if (adjustedDateTime.isBefore(now)) {
-        adjustedDateTime.add(const Duration(days: 1));
+      // If the selected time is in the past (but not exactly the current time), schedule it for the next day
+      if (selectedDateTime.isBefore(now)) {
+        selectedDateTime = selectedDateTime.add(const Duration(days: 1));
       }
 
-      final timeUntilAlarm = adjustedDateTime.difference(now);
+      final timeUntilAlarm = selectedDateTime.difference(now);
 
-      _countdownTimer?.cancel();
+      _countdownTimer?.cancel(); // Cancel any existing timers
+
+      // Debug log
+      print('Alarm scheduled for: ${selectedDateTime.toLocal()}');
 
       // Set a new timer
       _countdownTimer = Timer(timeUntilAlarm, () {
+        print('Alarm triggered at: ${DateTime.now().toLocal()}');
         _alarmTriggered();
-        // _publishMessage(topicReminder, 'Reminder: It\'s time to drink!');
       });
-
-      print(
-          'Alarm set for: ${adjustedDateTime.toLocal()}'); // Debugging line to verify time
     }
   }
 
@@ -209,7 +196,6 @@ class _ReminderScreenState extends State<ReminderScreen> {
         backgroundColor: const Color(0xFF86B9D6),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        // Removes the default back button
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           iconSize: 30,
